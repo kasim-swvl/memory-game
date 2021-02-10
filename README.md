@@ -19,3 +19,6 @@ I've deployed the compiled codebase on Netlify, click [here](https://loving-ferm
 ### New Features ⭐
 
 - A synonyms mode for cards to help with SAT preparation
+- Add keyboard support in menus
+- Focus on first card on PLAY AGAIN or RESTART
+- Delay animation without delaying logic
