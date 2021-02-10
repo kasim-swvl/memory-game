@@ -34,6 +34,7 @@ export default function useKeyboard(length, columns) {
           focus(-1);
           break;
         case "Space":
+        case "Enter":
           refs.current[focused].current.click();
           break;
         default:
