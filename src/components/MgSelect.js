@@ -2,8 +2,6 @@ import { css, cx } from "@emotion/css";
 import List from "./List";
 import Popover from "./Popover";
 
-const mgRootCss = css``;
-
 const mgLabelCss = css`
   font-size: 1.5em;
   text-transform: lowercase;

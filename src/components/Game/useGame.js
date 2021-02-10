@@ -28,45 +28,26 @@ function dataProcessor(d, m) {
   )(d);
 }
 
-function makeCards(m, d) {
-  const list = GAME.modes[m].list;
-  const count = GAME.difficulties[d].count;
-  const data = _.pickRandomX(count / 2, list);
-  return dataProcessor(data, m);
-}
-
 export default function useGame() {
   const [state, setState] = useState(defaultState);
+  const [focus, setFocus] = useState(undefined);
   const countdown = useRef(null);
 
-  const startGame = ({ mode, difficulty }) => {
-    setState({
-      mode,
-      difficulty,
-      cards: makeCards(mode, difficulty),
-      idealTime: GAME.difficulties[difficulty].time,
-      elapsedTime: 0,
-      score: 0,
-      moves: 0,
-      status: 0,
-      rating: null,
-    });
-    startTimer();
+  const startTimer = () => {
+    countdown.current = setInterval(() => {
+      setState(s => _.merge(s, { elapsedTime: s.elapsedTime + 1 }));
+    }, 1000);
   };
 
-  const playAgain = () => {
-    setState(s =>
-      _.merge(s, {
-        cards: makeCards(s.mode, s.difficulty),
-        idealTime: GAME.difficulties[s.difficulty].time,
-        elapsedTime: 0,
-        score: 0,
-        moves: 0,
-        status: 0,
-        rating: null,
-      })
-    );
-    startTimer();
+  const stopTimer = () => {
+    clearInterval(countdown.current);
+  };
+
+  const getCards = (m, d) => {
+    const list = GAME.modes[m].list;
+    const count = GAME.difficulties[d].count;
+    const data = _.pickRandomX(count / 2, list);
+    return dataProcessor(data, m);
   };
 
   const addMove = () => {
@@ -101,6 +82,21 @@ export default function useGame() {
     return Math.max(0, Math.min(rating, 3));
   };
 
+  const startGame = ({ mode, difficulty }) => {
+    setState({
+      mode,
+      difficulty,
+      cards: getCards(mode, difficulty),
+      idealTime: GAME.difficulties[difficulty].time,
+      elapsedTime: 0,
+      score: 0,
+      moves: 0,
+      status: 0,
+      rating: null,
+    });
+    startTimer();
+  };
+
   const pauseGame = () => {
     stopTimer();
     setState(s => _.merge(s, { status: 1 }));
@@ -116,20 +112,23 @@ export default function useGame() {
     setState(s => _.merge(s, { status: 2, rating: getRating() }));
   };
 
+  const playAgain = () => {
+    setState(s =>
+      _.merge(s, {
+        cards: getCards(s.mode, s.difficulty),
+        idealTime: GAME.difficulties[s.difficulty].time,
+        elapsedTime: 0,
+        score: 0,
+        moves: 0,
+        status: 0,
+        rating: null,
+      })
+    );
+    startTimer();
+  };
+
   const resetGame = () => {
     setState(defaultState);
-  };
-
-  const startTimer = () => {
-    countdown.current = setInterval(() => {
-      setState(s => {
-        return _.merge(s, { elapsedTime: s.elapsedTime + 1 });
-      });
-    }, 1000);
-  };
-
-  const stopTimer = () => {
-    clearInterval(countdown.current);
   };
 
   useEffect(() => {
@@ -138,6 +137,7 @@ export default function useGame() {
 
   return {
     state,
+    setFocus,
     startGame,
     endGame,
     resetGame,

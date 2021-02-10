@@ -1,4 +1,5 @@
 import { css, cx } from "@emotion/css";
+import { forwardRef } from "react";
 
 const cardInnerCss = css`
   position: relative;
@@ -45,8 +46,10 @@ const cardCss = css`
   transition: all 0.2s linear;
   perspective: 1000px;
   user-select: none;
-  &:hover {
-    box-shadow: 0 0px 30px 4px rgba(0, 0, 0, 0.125);
+  outline: none;
+  // &:hover,
+  &:focus {
+    box-shadow: 0 0px 30px 4px rgb(247, 140, 44, 0.5);
   }
 `;
 
@@ -70,9 +73,12 @@ const wordCss = css`
   line-height: 2em;
 `;
 
-export default function Card({ index, value, paired, visible, type, onClick }) {
+export default forwardRef(function Card(
+  { index, value, paired, visible, type, onClick },
+  ref
+) {
   return (
-    <div onClick={onClick} className={cx(cardCss)}>
+    <div ref={ref} onClick={onClick} className={cx(cardCss)} tabIndex="1">
       <div className={cx(cardInnerCss, visible && visibleCss)}>
         <div className={cx(cardSideCss, cardFrontCss)}></div>
         <div
@@ -89,4 +95,4 @@ export default function Card({ index, value, paired, visible, type, onClick }) {
       </div>
     </div>
   );
-}
+});

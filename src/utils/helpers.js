@@ -77,3 +77,7 @@ export const fnReduce = curry((fn, init, l) => {
 export const fnFilter = curry((fn, l) => {
   return l.filter(fn);
 });
+
+export const clamp = curry((min, max, val) => {
+  return Math.min(max, Math.max(min, val));
+});
