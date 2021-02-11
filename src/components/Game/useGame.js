@@ -99,7 +99,7 @@ export default function useGame() {
         });
         startTimer();
         resolve();
-      }, Math.round(Math.random() * 1500));
+      }, Math.round(Math.random() * 1000));
     });
   };
 
@@ -119,19 +119,24 @@ export default function useGame() {
   };
 
   const playAgain = () => {
-    setState(s =>
-      _.merge(s, {
-        sessionId: randomText(),
-        cards: getCards(s.mode, s.difficulty),
-        idealTime: GAME.difficulties[s.difficulty].time,
-        elapsedTime: 0,
-        score: 0,
-        moves: 0,
-        status: 0,
-        rating: null,
-      })
-    );
-    startTimer();
+    return new Promise(resolve => {
+      setTimeout(() => {
+        setState(s =>
+          _.merge(s, {
+            sessionId: randomText(),
+            cards: getCards(s.mode, s.difficulty),
+            idealTime: GAME.difficulties[s.difficulty].time,
+            elapsedTime: 0,
+            score: 0,
+            moves: 0,
+            status: 0,
+            rating: null,
+          })
+        );
+        startTimer();
+        resolve();
+      }, Math.round(Math.random() * 250));
+    });
   };
 
   const resetGame = () => {

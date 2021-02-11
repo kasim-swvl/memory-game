@@ -20,7 +20,7 @@ export default function CardBoard() {
 
   useEffect(() => {
     focus(0);
-  }, [game.state.sessionId]);
+  }, [game.state.sessionId, focus]);
 
   return (
     <div tabIndex="0" className={rootCss} onKeyUp={handleKeyUp}>
