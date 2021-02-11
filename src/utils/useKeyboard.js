@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import { createRef, useCallback, useEffect, useRef, useState } from "react";
-import { between, clamp } from "./helpers";
+import { between } from "./helpers";
 
 export default function useKeyboard(length, columns) {
   const [focused, setFocused] = useState(0);
