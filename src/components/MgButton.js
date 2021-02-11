@@ -31,6 +31,10 @@ const btnCss = css`
     background-color: #98bcf2;
   }
 
+  &:focus {
+    box-shadow: 0px 0px 10px 4px #8cb4f0;
+  }
+
   &:active {
     background-color: #7ea2d8;
   }
@@ -42,14 +46,24 @@ const secondaryBtnCss = css`
   &:hover {
     background-color: #f298aa;
   }
+  &:focus {
+    box-shadow: 0px 0px 10px 4px #f08ca0;
+  }
   &:active {
     background-color: #d87e90;
   }
 `;
 
-export default function MgButton({ children, onClick, type, className }) {
+export default function MgButton({
+  autoFocus,
+  children,
+  onClick,
+  type,
+  className,
+}) {
   return (
     <button
+      autoFocus={autoFocus}
       onClick={onClick}
       className={cx(btnCss, className, type === "secondary" && secondaryBtnCss)}
     >

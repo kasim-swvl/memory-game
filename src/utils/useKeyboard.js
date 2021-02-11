@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import { createRef, useCallback, useEffect, useRef, useState } from "react";
-import { clamp } from "./helpers";
+import { between, clamp } from "./helpers";
 
 export default function useKeyboard(length, columns) {
   const [focused, setFocused] = useState(0);
@@ -8,8 +8,9 @@ export default function useKeyboard(length, columns) {
 
   const focus = useCallback(
     idx => {
-      const _idx = clamp(0, length - 1, focused + idx);
-      refs.current[_idx].current.focus();
+      if (between(0, length - 1, focused + idx)) {
+        refs.current[focused + idx].current.focus();
+      }
     },
     [focused, length]
   );
@@ -47,7 +48,7 @@ export default function useKeyboard(length, columns) {
   useEffect(() => {
     const _refs = refs.current;
     _refs.map((ref, idx) => {
-      ref.current.addEventListener("focus", () => handleRefFocus(idx));
+      ref.current?.addEventListener("focus", () => handleRefFocus(idx));
     });
 
     // Set focus on the first card on mount
@@ -55,10 +56,10 @@ export default function useKeyboard(length, columns) {
 
     return () => {
       _refs.map((ref, idx) => {
-        ref.current.removeEventListener("focus", () => handleRefFocus(idx));
+        ref.current?.removeEventListener("focus", () => handleRefFocus(idx));
       });
     };
   }, []);
 
-  return { refs, focus, handleKeyUp };
+  return { refs, focus, focused, handleKeyUp };
 }

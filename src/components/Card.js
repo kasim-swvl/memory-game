@@ -74,7 +74,7 @@ const wordCss = css`
 `;
 
 export default forwardRef(function Card(
-  { index, value, paired, visible, type, onClick },
+  { value, paired, visible, type, onClick },
   ref
 ) {
   return (

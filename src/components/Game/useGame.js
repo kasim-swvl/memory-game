@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { helpers as _ } from "../../utils";
 import { GAME } from "../../constants";
+import { randomText } from "../../utils/helpers";
 
 const defaultState = {
   mode: GAME.modes.letters.value,
@@ -30,7 +31,6 @@ function dataProcessor(d, m) {
 
 export default function useGame() {
   const [state, setState] = useState(defaultState);
-  const [focus, setFocus] = useState(undefined);
   const countdown = useRef(null);
 
   const startTimer = () => {
@@ -83,18 +83,24 @@ export default function useGame() {
   };
 
   const startGame = ({ mode, difficulty }) => {
-    setState({
-      mode,
-      difficulty,
-      cards: getCards(mode, difficulty),
-      idealTime: GAME.difficulties[difficulty].time,
-      elapsedTime: 0,
-      score: 0,
-      moves: 0,
-      status: 0,
-      rating: null,
+    return new Promise(resolve => {
+      setTimeout(() => {
+        setState({
+          sessionId: randomText(),
+          mode,
+          difficulty,
+          cards: getCards(mode, difficulty),
+          idealTime: GAME.difficulties[difficulty].time,
+          elapsedTime: 0,
+          score: 0,
+          moves: 0,
+          status: 0,
+          rating: null,
+        });
+        startTimer();
+        resolve();
+      }, Math.round(Math.random() * 1500));
     });
-    startTimer();
   };
 
   const pauseGame = () => {
@@ -115,6 +121,7 @@ export default function useGame() {
   const playAgain = () => {
     setState(s =>
       _.merge(s, {
+        sessionId: randomText(),
         cards: getCards(s.mode, s.difficulty),
         idealTime: GAME.difficulties[s.difficulty].time,
         elapsedTime: 0,
@@ -137,7 +144,6 @@ export default function useGame() {
 
   return {
     state,
-    setFocus,
     startGame,
     endGame,
     resetGame,

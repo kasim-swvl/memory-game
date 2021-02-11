@@ -81,3 +81,11 @@ export const fnFilter = curry((fn, l) => {
 export const clamp = curry((min, max, val) => {
   return Math.min(max, Math.max(min, val));
 });
+
+export const between = curry((min, max, val) => {
+  return val >= min && val <= max;
+});
+
+export const randomText = () => {
+  return Math.random().toString(32).substring(4);
+};

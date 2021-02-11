@@ -4,6 +4,7 @@ import { GAME } from "../constants";
 import { helpers } from "../utils";
 import Backdrop from "./Backdrop";
 import GameContext from "./Game/Game.context";
+import IfThen from "./IfThen";
 import MgButton from "./MgButton";
 import MgSelect from "./MgSelect";
 import Rating from "./Rating";
@@ -44,33 +45,45 @@ export function MainMenu({ visible }) {
     mode: GAME.modes.letters.value,
     difficulty: GAME.difficulties.easy.value,
   });
+  const [loading, setLoading] = useState(false);
   const handleChange = key => (e, o) => {
     setState(s => helpers.merge(s, { [key]: o.value }));
+  };
+  const handleStart = () => {
+    setLoading(true);
+    startGame(state).then(() => {
+      setLoading(false);
+    });
   };
 
   return (
     <Backdrop visible={visible}>
       <div className={menuCss}>
-        <Text className={titleCss}>memory game</Text>
-        <MgSelect
-          name="difficulty"
-          label="Difficulty"
-          options={Object.values(GAME.difficulties)}
-          className={selectCss}
-          onChange={handleChange("difficulty")}
-          value={state.difficulty}
-        />
-        <MgSelect
-          name="mode"
-          label="Mode"
-          options={Object.values(GAME.modes)}
-          className={selectCss}
-          onChange={handleChange("mode")}
-          value={state.mode}
-        />
-        <MgButton className={btnCss} onClick={() => startGame(state)}>
-          START
-        </MgButton>
+        <IfThen condition={loading}>
+          <Text className={titleCss}>loading...</Text>
+        </IfThen>
+        <IfThen condition={!loading}>
+          <Text className={titleCss}>memory game</Text>
+          <MgSelect
+            name="difficulty"
+            label="Difficulty"
+            options={Object.values(GAME.difficulties)}
+            className={selectCss}
+            onChange={handleChange("difficulty")}
+            value={state.difficulty}
+          />
+          <MgSelect
+            name="mode"
+            label="Mode"
+            options={Object.values(GAME.modes)}
+            className={selectCss}
+            onChange={handleChange("mode")}
+            value={state.mode}
+          />
+          <MgButton autoFocus className={btnCss} onClick={handleStart}>
+            START
+          </MgButton>
+        </IfThen>
       </div>
     </Backdrop>
   );
@@ -84,7 +97,7 @@ export function EndMenu({ visible }) {
     <Backdrop visible={visible}>
       <div className={menuCss}>
         <Rating rating={rating} />
-        <MgButton className={btnCss} onClick={playAgain}>
+        <MgButton autoFocus className={btnCss} onClick={playAgain}>
           PLAY AGAIN
         </MgButton>
         <MgButton className={btnCss} onClick={resetGame} type="secondary">
@@ -101,7 +114,7 @@ export function PauseMenu({ visible }) {
   return (
     <Backdrop visible={visible}>
       <div className={menuCss}>
-        <MgButton className={btnCss} onClick={resumeGame}>
+        <MgButton autoFocus className={btnCss} onClick={resumeGame}>
           RESUME
         </MgButton>
         <MgButton className={btnCss} onClick={playAgain}>
